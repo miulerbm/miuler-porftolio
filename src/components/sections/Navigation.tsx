@@ -20,33 +20,42 @@ const sectionIds = ['home', 'about', 'projects', 'experience', 'contact']
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const activeSection = useActiveSection(sectionIds)
-  const { scrollToSection } = useSmoothScroll()
+  const activeSection = useActiveSection(sectionIds, 50)
+  const { scrollToSection, enableSectionSnap } = useSmoothScroll()
+
+  // Habilitar snap scroll (opcional)
+  useEffect(() => {
+    const cleanup = enableSectionSnap()
+    return cleanup
+  }, [enableSectionSnap])
 
   const isActive = (href: string) => {
     const sectionId = href.replace('#', '')
     return activeSection === sectionId
   }
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (href: string, e?: React.MouseEvent) => {
+    e?.preventDefault()
     setIsOpen(false)
     const sectionId = href.replace('#', '')
     scrollToSection(sectionId)
   }
 
   useEffect(() => {
+    let ticking = false
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 50)
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const scrollToElement = (href: string) => {
-    const sectionId = href.replace('#', '')
-    scrollToSection(sectionId)
-  }
 
   return (
     <>
@@ -59,30 +68,38 @@ export function Navigation() {
         <nav className="section-padding py-4">
           <div className="container-width flex items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handleNavClick('#home')}
+              className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+            >
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-purple-600 rounded-lg flex items-center justify-center shadow-sm">
                 <span className="text-white font-bold text-sm">M</span>
               </div>
               <span className="font-bold text-xl text-gradient">Miuler</span>
-            </div>
+            </button>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               {navigationItems.map(item => (
                 <button
                   key={item.name}
-                  onClick={() => handleNavClick(item.href)}
+                  onClick={e => handleNavClick(item.href, e)}
                   className={cn(
-                    'relative font-medium transition-colors duration-200 cursor-pointer',
+                    'relative font-medium transition-all duration-200 cursor-pointer group',
                     isActive(item.href)
                       ? 'text-primary'
                       : 'text-foreground/80 hover:text-foreground'
                   )}
                 >
                   {item.name}
-                  {isActive(item.href) && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />
-                  )}
+                  <div
+                    className={cn(
+                      'absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full transition-all duration-200',
+                      isActive(item.href)
+                        ? 'opacity-100 scale-x-100'
+                        : 'opacity-0 scale-x-0 group-hover:opacity-50 group-hover:scale-x-100'
+                    )}
+                  />
                 </button>
               ))}
             </div>
@@ -90,7 +107,11 @@ export function Navigation() {
             {/* Desktop Actions */}
             <div className="hidden md:flex items-center space-x-4">
               <ThemeToggle />
-              <Button onClick={() => scrollToElement('#contact')} size="sm">
+              <Button
+                onClick={() => handleNavClick('#contact')}
+                size="sm"
+                className="hover:scale-105 transition-transform duration-200"
+              >
                 Contáctame
               </Button>
             </div>
@@ -103,6 +124,7 @@ export function Navigation() {
                 size="icon"
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Toggle menu"
+                className="hover:scale-105 transition-transform duration-200"
               >
                 {isOpen ? (
                   <X className="h-5 w-5" />
@@ -122,16 +144,16 @@ export function Navigation() {
             className="fixed inset-0 bg-background/80 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
-          <div className="fixed top-20 left-4 right-4 bg-card border rounded-lg shadow-lg p-6">
+          <div className="fixed top-20 left-4 right-4 bg-card border rounded-lg shadow-lg p-6 animate-in slide-in-from-top duration-200">
             <div className="space-y-4">
               {navigationItems.map(item => (
                 <button
                   key={item.name}
-                  onClick={() => handleNavClick(item.href)}
+                  onClick={e => handleNavClick(item.href, e)}
                   className={cn(
-                    'block w-full text-left py-2 font-medium transition-colors duration-200 cursor-pointer',
+                    'block w-full text-left py-3 font-medium transition-colors duration-200 cursor-pointer rounded-lg px-3 hover:bg-muted/50',
                     isActive(item.href)
-                      ? 'text-primary'
+                      ? 'text-primary bg-primary/10'
                       : 'text-foreground hover:text-primary'
                   )}
                 >
@@ -140,7 +162,7 @@ export function Navigation() {
               ))}
               <div className="pt-4 border-t">
                 <Button
-                  onClick={() => scrollToElement('#contact')}
+                  onClick={() => handleNavClick('#contact')}
                   className="w-full"
                 >
                   Contáctame

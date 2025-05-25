@@ -52,7 +52,7 @@ export function ContactSection() {
           {/* Header */}
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Hablemos <span className="text-gradient">juntos</span>
+              Trabajemos <span className="text-gradient">juntos</span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               ¿Tienes un proyecto en mente? ¿Quieres colaborar? ¡Me encantaría
@@ -89,9 +89,11 @@ export function ContactSection() {
                         <Phone className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">Teléfono</p>
+                        <p className="font-medium">WhatsApp</p>
                         <a
-                          href={`tel:${contact.phone}`}
+                          href={`https://wa.me/${contact.phone.replace(/[^0-9]/g, '')}?text=¡Hola! Me interesa contactarte para hablar sobre desarrollo web.`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-muted-foreground hover:text-primary transition-colors"
                         >
                           {contact.phone}
