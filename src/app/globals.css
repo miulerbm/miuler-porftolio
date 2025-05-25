@@ -1,44 +1,58 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Modo claro - Inspirado en Claude (cálido) + AWS (corporativo) */
+  --background: #fefcfb;
+  --foreground: #2d1b0e;
   --card: #ffffff;
-  --card-foreground: #171717;
-  --primary: #3b82f6;
+  --card-foreground: #2d1b0e;
+  --primary: #d97706; /* Orange AWS con toque Claude */
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f8fafc;
-  --muted-foreground: #64748b;
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
+  --secondary: #f1f0ef;
+  --secondary-foreground: #57534e;
+  --muted: #f7f6f4;
+  --muted-foreground: #78716c;
+  --accent: #fed7aa; /* Orange suave */
+  --accent-foreground: #9a3412;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #3b82f6;
+  --border: #e7e5e4;
+  --input: #e7e5e4;
+  --ring: #d97706;
   --radius: 0.5rem;
+
+  /* Colores adicionales Claude + AWS */
+  --aws-blue: #232f3e;
+  --aws-orange: #ff9900;
+  --claude-warm: #d4a574;
+  --claude-cream: #f5f1eb;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card: #171717;
-  --card-foreground: #ededed;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --secondary: #262626;
-  --secondary-foreground: #fafafa;
-  --muted: #404040;
+  /* Modo oscuro - Más dramático con toques cálidos */
+  --background: #1a1a1a;
+  --foreground: #f5f1eb;
+  --card: #262626;
+  --card-foreground: #f5f1eb;
+  --primary: #ff9900; /* AWS Orange más vibrante para oscuro */
+  --primary-foreground: #1a1a1a;
+  --secondary: #2d2d2d;
+  --secondary-foreground: #d4a574;
+  --muted: #1f1f1f;
   --muted-foreground: #a3a3a3;
-  --accent: #262626;
-  --accent-foreground: #fafafa;
+  --accent: #3d3d3d;
+  --accent-foreground: #ff9900;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #404040;
-  --input: #404040;
-  --ring: #3b82f6;
+  --border: #333333;
+  --input: #333333;
+  --ring: #ff9900;
+
+  /* Colores adicionales para modo oscuro */
+  --aws-blue: #161e2d;
+  --aws-orange: #ffb84d;
+  --claude-warm: #d4a574;
+  --claude-cream: #2d2520;
 }
 
 @theme inline {
@@ -67,6 +81,12 @@
   --font-mono:
     'JetBrains Mono', var(--font-jetbrains-mono), var(--font-geist-mono),
     Consolas, monospace;
+
+  /* Colores personalizados adicionales */
+  --color-aws-blue: var(--aws-blue);
+  --color-aws-orange: var(--aws-orange);
+  --color-claude-warm: var(--claude-warm);
+  --color-claude-cream: var(--claude-cream);
 }
 
 * {
@@ -86,7 +106,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Scrollbar personalizado */
+/* Scrollbar personalizado con colores de la paleta */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -101,21 +121,96 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-foreground);
+  background: var(--primary);
 }
 
-/* Utilidades personalizadas */
+/* Utilidades personalizadas mejoradas */
 .text-gradient {
-  background: linear-gradient(to right, var(--primary), #2563eb);
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--aws-orange),
+    var(--claude-warm)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-aws {
+  background: linear-gradient(135deg, var(--aws-blue), var(--aws-orange));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-claude {
+  background: linear-gradient(135deg, var(--claude-warm), var(--primary));
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
 }
 
 .glass-effect {
-  backdrop-filter: blur(8px);
-  background: color-mix(in srgb, var(--background) 80%, transparent);
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--background) 85%, transparent);
   border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.glass-effect-warm {
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--claude-cream) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--claude-warm) 30%, transparent);
+}
+
+/* Botones temáticos */
+.btn-aws {
+  background: var(--aws-orange);
+  color: white;
+  border: 1px solid var(--aws-orange);
+}
+
+.btn-aws:hover {
+  background: color-mix(in srgb, var(--aws-orange) 80%, var(--aws-blue));
+}
+
+.btn-claude {
+  background: var(--claude-warm);
+  color: white;
+  border: 1px solid var(--claude-warm);
+}
+
+.btn-claude:hover {
+  background: color-mix(in srgb, var(--claude-warm) 85%, var(--primary));
+}
+
+/* Fix cursor pointer for interactive elements */
+button,
+[role='button'],
+.cursor-pointer,
+a[href],
+button[type='button'],
+input[type='button'],
+input[type='submit'],
+[tabindex]:not([tabindex='-1']),
+[onclick] {
+  cursor: pointer !important;
+}
+
+button:disabled,
+[disabled] {
+  cursor: not-allowed !important;
+}
+
+/* Asegurar que elementos interactivos tengan pointer */
+* {
+  &:hover {
+    &[onclick],
+    &[role='button'],
+    &[tabindex]:not([tabindex='-1']) {
+      cursor: pointer !important;
+    }
+  }
 }
 
 .section-padding {

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Button, ThemeToggle } from '@/components/ui'
+import { useActiveSection } from '@/hooks/useActiveSection'
+import { useSmoothScroll } from '@/hooks/useSmoothScroll'
 import { cn } from '@/lib'
 
 const navigationItems = [
@@ -13,9 +15,24 @@ const navigationItems = [
   { name: 'Contacto', href: '#contact' },
 ]
 
+const sectionIds = ['home', 'about', 'projects', 'experience', 'contact']
+
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const activeSection = useActiveSection(sectionIds)
+  const { scrollToSection } = useSmoothScroll()
+
+  const isActive = (href: string) => {
+    const sectionId = href.replace('#', '')
+    return activeSection === sectionId
+  }
+
+  const handleNavClick = (href: string) => {
+    setIsOpen(false)
+    const sectionId = href.replace('#', '')
+    scrollToSection(sectionId)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,11 +44,8 @@ export function Navigation() {
   }, [])
 
   const scrollToElement = (href: string) => {
-    setIsOpen(false)
-    const element = document.querySelector(href)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
+    const sectionId = href.replace('#', '')
+    scrollToSection(sectionId)
   }
 
   return (
@@ -46,10 +60,8 @@ export function Navigation() {
           <div className="container-width flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">
-                  M
-                </span>
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-purple-600 rounded-lg flex items-center justify-center shadow-sm">
+                <span className="text-white font-bold text-sm">M</span>
               </div>
               <span className="font-bold text-xl text-gradient">Miuler</span>
             </div>
@@ -59,10 +71,18 @@ export function Navigation() {
               {navigationItems.map(item => (
                 <button
                   key={item.name}
-                  onClick={() => scrollToElement(item.href)}
-                  className="text-foreground/80 hover:text-foreground transition-colors duration-200 font-medium"
+                  onClick={() => handleNavClick(item.href)}
+                  className={cn(
+                    'relative font-medium transition-colors duration-200 cursor-pointer',
+                    isActive(item.href)
+                      ? 'text-primary'
+                      : 'text-foreground/80 hover:text-foreground'
+                  )}
                 >
                   {item.name}
+                  {isActive(item.href) && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                  )}
                 </button>
               ))}
             </div>
@@ -107,8 +127,13 @@ export function Navigation() {
               {navigationItems.map(item => (
                 <button
                   key={item.name}
-                  onClick={() => scrollToElement(item.href)}
-                  className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                  onClick={() => handleNavClick(item.href)}
+                  className={cn(
+                    'block w-full text-left py-2 font-medium transition-colors duration-200 cursor-pointer',
+                    isActive(item.href)
+                      ? 'text-primary'
+                      : 'text-foreground hover:text-primary'
+                  )}
                 >
                   {item.name}
                 </button>

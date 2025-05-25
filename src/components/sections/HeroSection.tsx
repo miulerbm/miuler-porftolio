@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib'
+import { contact } from '@/data/portfolio'
 
 const roles = [
   'Full Stack Developer',
@@ -37,9 +38,9 @@ export function HeroSection() {
       className="min-h-screen flex items-center justify-center relative overflow-hidden"
     >
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5" />
       <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-1000" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
 
       <div className="section-padding py-20 relative z-10">
         <div className="container-width">
@@ -79,7 +80,7 @@ export function HeroSection() {
             {/* Social Links */}
             <div className="flex items-center justify-center space-x-4">
               <a
-                href="https://github.com/miuler"
+                href={contact.social.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
@@ -89,7 +90,7 @@ export function HeroSection() {
                 </Button>
               </a>
               <a
-                href="https://linkedin.com/in/miuler"
+                href={contact.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
@@ -98,7 +99,7 @@ export function HeroSection() {
                   <Linkedin className="h-5 w-5" />
                 </Button>
               </a>
-              <a href="mailto:hello@miuler.dev" aria-label="Email">
+              <a href={`mailto:${contact.email}`} aria-label="Email">
                 <Button variant="outline" size="icon">
                   <Mail className="h-5 w-5" />
                 </Button>

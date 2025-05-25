@@ -1,6 +1,6 @@
 'use client'
 
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, Monitor } from 'lucide-react'
 import { useTheme } from '@/lib/theme-context'
 import { Button } from './Button'
 
@@ -20,13 +20,13 @@ export function ThemeToggle() {
   const getIcon = () => {
     if (theme === 'light') return <Sun className="h-4 w-4" />
     if (theme === 'dark') return <Moon className="h-4 w-4" />
-    return <Sun className="h-4 w-4" /> // system default
+    return <Monitor className="h-4 w-4" /> // system theme
   }
 
   const getTitle = () => {
-    if (theme === 'light') return 'Switch to dark mode'
-    if (theme === 'dark') return 'Switch to system theme'
-    return 'Switch to light mode'
+    if (theme === 'light') return 'Cambiar a modo oscuro'
+    if (theme === 'dark') return 'Cambiar a modo sistema'
+    return 'Cambiar a modo claro'
   }
 
   return (
